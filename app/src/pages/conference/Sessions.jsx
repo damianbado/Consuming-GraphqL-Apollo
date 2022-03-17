@@ -15,6 +15,7 @@ const SESSION_ATTRIBUTES = gql`
     room
     level
     startsAt
+    description @include(if: $isDescription)
     speakers {
       id
       name
@@ -23,7 +24,7 @@ const SESSION_ATTRIBUTES = gql`
 `;
 
 const SESSIONS_BY_DAY = gql`
-  query sessions($day: String!) {
+  query sessions($day: String!, $isDescription: Boolean!) {
     intro: sessions(day: $day, level: "Introductory and overview") {
       ...SessionInfo
     }
@@ -38,7 +39,7 @@ const SESSIONS_BY_DAY = gql`
 `;
 
 const SESSIONS_ALL = gql`
-  query sessions {
+  query sessions($isDescription: Boolean!) {
     sessions {
       ...SessionInfo
     }
@@ -48,7 +49,9 @@ const SESSIONS_ALL = gql`
 
 function AllSessionList() {
   /* ---> Invoke useQuery hook here to retrieve all sessions and call SessionItem */
-  const { loading, data } = useQuery(SESSIONS_ALL);
+  const { loading, data } = useQuery(SESSIONS_ALL, {
+    variables: { isDescription: false },
+  });
 
   if (loading) return <p>Loading Sessions...</p>;
   return data.sessions.map((session) => (
@@ -65,8 +68,9 @@ const SessionList = ({ day }) => {
   /* ---> Invoke useQuery hook here to retrieve sessions per day and call SessionItem */
 
   if (day === "") day = "Wednesday";
+  let isDescription = true;
   const { loading, error, data } = useQuery(SESSIONS_BY_DAY, {
-    variables: { day },
+    variables: { day, isDescription },
   });
 
   if (loading) return <p>Loading Sessions...</p>;
@@ -113,7 +117,8 @@ const SessionList = ({ day }) => {
 
 function SessionItem({ session }) {
   /* ---> Replace hard coded session values with data that you get back from GraphQL server here */
-  const { id, title, day, room, level, startsAt, speakers } = session;
+  const { id, title, day, room, level, startsAt, description, speakers } =
+    session;
   return (
     <div key={id} className="col-xs-12 col-sm-6" style={{ padding: 5 }}>
       <div className="panel panel-default">
@@ -125,6 +130,7 @@ function SessionItem({ session }) {
           <h5>{`Day: ${day}`}</h5>
           <h5>{`Room Number: ${room}`}</h5>
           <h5>{`Starts at: ${startsAt}`}</h5>
+          <h5>{`Starts at: ${description}`}</h5>
         </div>
         <div className="panel-footer">
           {speakers.map(({ id, name }) => (
