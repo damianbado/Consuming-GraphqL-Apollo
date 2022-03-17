@@ -1,7 +1,7 @@
 {
   "name": "globomantics",
   "version": "1.0.0",
-  "description": "",
+  "description": "Code repo for course Consuming a GraphQL API with Apollo Client and React on Pluralsight - by Adhithi Ravichandran",
   "main": "index.js",
   "scripts": {
     "app": "cd app && npm run start",
@@ -15,7 +15,18 @@
     "npm-run-all": "4.1.5"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.10",
+    "apollo-codegen": "^0.20.2",
     "bcryptjs": "^2.4.3",
+    "graphql": "^16.3.0",
     "jsonwebtoken": "^8.5.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damianbado/Consuming-GraphqL-Apollo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/damianbado/Consuming-GraphqL-Apollo/issues"
+  },
+  "homepage": "https://github.com/damianbado/Consuming-GraphqL-Apollo#readme"
 }

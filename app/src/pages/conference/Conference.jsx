@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import "./style-sessions.css";
-import { Sessions, AddSession } from "./Sessions"
-import { Speakers, Speaker } from "./Speakers"
+import { Sessions, AddSession } from "./Sessions";
+import { Speakers, Speaker } from "./Speakers";
 
 export function Conference() {
   const { path, url } = useRouteMatch();
@@ -10,8 +10,8 @@ export function Conference() {
   return (
     <>
       <Switch>
-        <Route path={`${path}/sessions/new`}>	
-          <AddSession />	
+        <Route path={`${path}/sessions/new`}>
+          <AddSession />
         </Route>
         <Route path={`${path}/sessions`}>
           <Sessions />
