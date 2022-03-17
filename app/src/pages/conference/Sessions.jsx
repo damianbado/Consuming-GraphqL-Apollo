@@ -3,6 +3,7 @@ import "./style-sessions.css";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import { gql, useQuery } from "@apollo/client";
+import { shouldCanonizeResults } from "@apollo/client/cache/inmemory/helpers";
 
 /* ---> Define queries, mutations and fragments here */
 
@@ -13,6 +14,7 @@ const SESSION_ATTRIBUTES = gql`
     day
     room
     level
+    startsAt
     speakers {
       id
       name
@@ -22,7 +24,13 @@ const SESSION_ATTRIBUTES = gql`
 
 const SESSIONS_BY_DAY = gql`
   query sessions($day: String!) {
-    sessions(day: $day) {
+    intro: sessions(day: $day, level: "Introductory and overview") {
+      ...SessionInfo
+    }
+    intermediate: sessions(day: $day, level: "Intermediate") {
+      ...SessionInfo
+    }
+    advanced: sessions(day: $day, level: "Advanced") {
       ...SessionInfo
     }
   }
@@ -65,19 +73,47 @@ const SessionList = ({ day }) => {
 
   if (error) return <p>Error loading sessions!</p>;
 
-  return data.sessions.map((session) => (
-    <SessionItem
-      key={session.id}
-      session={{
-        ...session,
-      }}
-    />
-  ));
+  const results = [];
+
+  results.push(
+    data.intro.map((session) => (
+      <SessionItem
+        key={session.id}
+        session={{
+          ...session,
+        }}
+      />
+    ))
+  );
+
+  results.push(
+    data.intermediate.map((session) => (
+      <SessionItem
+        key={session.id}
+        session={{
+          ...session,
+        }}
+      />
+    ))
+  );
+
+  results.push(
+    data.advanced.map((session) => (
+      <SessionItem
+        key={session.id}
+        session={{
+          ...session,
+        }}
+      />
+    ))
+  );
+
+  return results;
 };
 
 function SessionItem({ session }) {
   /* ---> Replace hard coded session values with data that you get back from GraphQL server here */
-  const { id, title, day, room, level, speakers } = session;
+  const { id, title, day, room, level, startsAt, speakers } = session;
   return (
     <div key={id} className="col-xs-12 col-sm-6" style={{ padding: 5 }}>
       <div className="panel panel-default">
@@ -88,7 +124,7 @@ function SessionItem({ session }) {
         <div className="panel-body">
           <h5>{`Day: ${day}`}</h5>
           <h5>{`Room Number: ${room}`}</h5>
-          <h5>{`Starts at: ${day}`}</h5>
+          <h5>{`Starts at: ${startsAt}`}</h5>
         </div>
         <div className="panel-footer">
           {speakers.map(({ id, name }) => (
