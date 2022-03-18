@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./style-sessions.css";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import { shouldCanonizeResults } from "@apollo/client/cache/inmemory/helpers";
 
 /* ---> Define queries, mutations and fragments here */
@@ -19,6 +19,24 @@ const SESSION_ATTRIBUTES = gql`
     speakers {
       id
       name
+    }
+  }
+`;
+
+const CREATE_SESSION = gql`
+  mutation createSession($session: SessionInput!) {
+    createSession(session: $session) {
+      id
+      title
+    }
+  }
+`;
+
+const MARK_FEATURED = gql`
+  mutation markFeatured($speakerId: ID!, $featured: Boolean!) {
+    markFeatured(speakerId: $speakerId, featured: $featured) {
+      speakerId
+      featured
     }
   }
 `;
@@ -130,7 +148,6 @@ function SessionItem({ session }) {
           <h5>{`Day: ${day}`}</h5>
           <h5>{`Room Number: ${room}`}</h5>
           <h5>{`Starts at: ${startsAt}`}</h5>
-          <h5>{`Starts at: ${description}`}</h5>
         </div>
         <div className="panel-footer">
           {speakers.map(({ id, name }) => (
@@ -204,6 +221,12 @@ export function Sessions() {
 export function SessionForm() {
   /* ---> Call useMutation hook here to create new session and update cache */
 
+  const [create, { called, error }] = useMutation(CREATE_SESSION);
+
+  if (called) return <p>Session Submitted Successfully</p>;
+
+  if (error) return <p> Session submition failed</p>;
+
   return (
     <div
       style={{
@@ -221,8 +244,9 @@ export function SessionForm() {
           day: "",
           level: "",
         }}
-        onSubmit={() => {
+        onSubmit={async (values) => {
           /* ---> Call useMutation mutate function here to create new session */
+          await create({ variables: { session: values } });
         }}
       >
         {() => (
@@ -267,7 +291,9 @@ export function SessionForm() {
               />
             </div>
             <div style={{ justifyContent: "center", alignContent: "center" }}>
-              <button className="btn btn-primary">Submit</button>
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
             </div>
           </Form>
         )}
