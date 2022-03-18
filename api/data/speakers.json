@@ -61,7 +61,8 @@
           "name": "Getting your head around .NET Standard 2.1"
         }
       ],
-      "name": "Reed Watts"
+      "name": "Reed Watts",
+      "featured": true
     },
     {
       "id": "0a8d8acd-7224-4746-8cb6-5eeee2626bf4",
@@ -72,7 +73,8 @@
           "name": "Building a QA practice from scratch"
         }
       ],
-      "name": "Ripley Vargas"
+      "name": "Ripley Vargas",
+      "featured": true
     },
     {
       "id": "e8eb22dd-d167-4efa-ba0e-905c94b38f9b",
@@ -87,7 +89,8 @@
           "name": "Team Work Makes the Dream Work"
         }
       ],
-      "name": "Constance Jimenez"
+      "name": "Constance Jimenez",
+      "featured": true
     },
     {
       "id": "bc6182e1-400e-41c6-aedc-a4a66c5dc236",

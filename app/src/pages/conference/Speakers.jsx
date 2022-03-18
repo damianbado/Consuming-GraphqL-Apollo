@@ -41,6 +41,7 @@ const MARK_FEATURED = gql`
   mutation markFeatured($speakerId: ID!, $featured: Boolean!) {
     markFeatured(speakerId: $speakerId, featured: $featured) {
       id
+      featured
     }
   }
 `;
@@ -51,7 +52,6 @@ const SpeakerList = () => {
   const { loading, error, data } = useQuery(SPEAKERS);
 
   /* ---> Replace hardcoded speaker values with data that you get back from GraphQL server here */
-  const featured = false;
 
   if (loading) return <p>Loading speakers...</p>;
   if (error) return <p>Error loading speakers!</p>;

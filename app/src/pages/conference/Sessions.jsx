@@ -32,15 +32,6 @@ const CREATE_SESSION = gql`
   }
 `;
 
-const MARK_FEATURED = gql`
-  mutation markFeatured($speakerId: ID!, $featured: Boolean!) {
-    markFeatured(speakerId: $speakerId, featured: $featured) {
-      speakerId
-      featured
-    }
-  }
-`;
-
 const SESSIONS_BY_DAY = gql`
   query sessions($day: String!, $isDescription: Boolean!) {
     intro: sessions(day: $day, level: "Introductory and overview") {
