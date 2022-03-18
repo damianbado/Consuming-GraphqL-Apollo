@@ -3,7 +3,6 @@ import "./style-sessions.css";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import { gql, useQuery, useMutation } from "@apollo/client";
-import { shouldCanonizeResults } from "@apollo/client/cache/inmemory/helpers";
 
 /* ---> Define queries, mutations and fragments here */
 
@@ -126,8 +125,7 @@ const SessionList = ({ day }) => {
 
 function SessionItem({ session }) {
   /* ---> Replace hard coded session values with data that you get back from GraphQL server here */
-  const { id, title, day, room, level, startsAt, description, speakers } =
-    session;
+  const { id, title, day, room, level, startsAt, speakers } = session;
   return (
     <div key={id} className="col-xs-12 col-sm-6" style={{ padding: 5 }}>
       <div className="panel panel-default">
@@ -212,7 +210,23 @@ export function Sessions() {
 export function SessionForm() {
   /* ---> Call useMutation hook here to create new session and update cache */
 
-  const [create, { called, error }] = useMutation(CREATE_SESSION);
+  const updateSessions = (cache, { data }) => {
+    cache.modify({
+      fields: {
+        session(existingSessions = []) {
+          const newSession = data.createSession;
+          cache.writeQuery({
+            query: SESSIONS_ALL,
+            data: { newSession, ...existingSessions },
+          });
+        },
+      },
+    });
+  };
+
+  const [create, { called, error }] = useMutation(CREATE_SESSION, {
+    update: updateSessions,
+  });
 
   if (called) return <p>Session Submitted Successfully</p>;
 
