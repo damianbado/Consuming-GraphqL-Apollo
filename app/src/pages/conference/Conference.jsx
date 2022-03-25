@@ -3,6 +3,7 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import "./style-sessions.css";
 import { Sessions, AddSession } from "./Sessions";
 import { Speakers, Speaker } from "./Speakers";
+import { Others, Invoices, Dashboard } from "./Others";
 
 export function Conference() {
   const { path, url } = useRouteMatch();
@@ -19,6 +20,7 @@ export function Conference() {
         <Route path={`${path}/speakers`}>
           <Speakers />
         </Route>
+
         <Route path={`${path}/speaker/:speaker_id`}>
           <Speaker />
         </Route>
@@ -34,10 +36,25 @@ export function Conference() {
                   <HeroLinkButton to={`${url}/sessions`}>
                     View Sessions
                   </HeroLinkButton>
+                  <HeroLinkButton to={`${url}/others`}>
+                    View Others
+                  </HeroLinkButton>
                 </div>
               </div>
             </div>
           </section>
+        </Route>
+      </Switch>
+      <Switch>
+        <Route path={`${path}/others`}>
+          <Others />
+        </Route>
+
+        <Route path={`${path}/invoices`}>
+          <Invoices />
+        </Route>
+        <Route path={`${path}/dashboard`}>
+          <Dashboard />
         </Route>
       </Switch>
     </>
